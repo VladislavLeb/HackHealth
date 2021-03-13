@@ -1,0 +1,17 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Шпацыр</title>
+        {% else %}
+        <title>Шпацыр</title>
+        {% endif %}
+    </head>
+    <body>
+        <center><div>
+            <a href="/index">Домашняя</a>
+            <a href="/select-route">Список маршрутов</a>
+            <a href="/select-point">Посмотреть список достопримечательностей</a>
+        </div> 
+        {% block content %}{% endblock %}</center>
+    </body>
+</html>

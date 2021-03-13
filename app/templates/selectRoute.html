@@ -1,0 +1,7 @@
+{% extends "header.html" %}
+{% block content %}
+<p>Список всех маршрутов:</p>
+{% for route in routes %}
+<div><p>В городе {{ route.city }} есть маршрут: <a href="/build-route?routeId={{ route.id }}"><b>{{ route.routeName }}</b></a></p></div>
+{% endfor %}
+{% endblock %}

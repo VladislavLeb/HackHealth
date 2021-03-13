@@ -1,0 +1,7 @@
+{% extends "header.html" %}
+{% block content %}
+<p>Список всех достопримечательностей:</p>
+{% for point in points %}
+<div><p>В городе {{ point.city }} мы советуем посетить: <a href="/goto-point?pointId={{ point.id }}"><b>{{ point.name }}</b></a></p></div>
+{% endfor %}
+{% endblock %}
