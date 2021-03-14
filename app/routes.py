@@ -90,7 +90,7 @@ def gotoPoint():
     url = url + str(point.pointX) + "%2C" + str(point.pointY) + "~"
     url = url[:len(url) - 1]
     url = url + "&z=" + zoom
-    return render_template('map.html', url = url, desc = point.description)
+    return render_template('map.html', pointName = point.name, url = url, desc = point.description)
 
 @app.route('/map', methods=['GET'])
 def openMap():
