@@ -53,7 +53,7 @@ def selectRoute():
     # ]
     routes = [i.serialize for i in MapRoutes.query.all()]
     title = 'Выбор маршрута'
-    # title = title.decode('utf-8')
+    title = title.decode('utf-8')
     return render_template('selectRoute.html', title=title, routes=routes)
     # return jsonify(json_list=[i.serialize for i in MapRoutes.query.all()])
 
@@ -61,7 +61,7 @@ def selectRoute():
 def selectPoint():
     points = [i.serialize for i in MapPoints.query.all()]
     title = 'Выбор точки'
-    # title = title.decode('utf-8')
+    title = title.decode('utf-8')
     return render_template('selectPoint.html', title=title, points = points)
 
 @app.route('/build-route', methods=['GET'])
