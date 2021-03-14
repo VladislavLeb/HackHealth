@@ -3,6 +3,7 @@ from app import app, db
 from flask import render_template, jsonify, request
 import json
 from app.models import MapPoints, MapRoutes
+from sqlalchemy import exc
 
 @app.route('/')
 @app.route('/index')
@@ -36,7 +37,7 @@ def index():
     user = {'username': 'Vladislav'}
     return render_template('index.html', title='Home', user=user)
 
-@app.route('/select-route')
+@app.route('/select-route', methods=['GET'])
 def selectRoute():
     # routesJson = [
     #     {
@@ -52,18 +53,28 @@ def selectRoute():
     #         'body': 'Какая гадость эта ваша заливная рыба!!'
     #     }
     # ]
-    routes = [i.serialize for i in MapRoutes.query.all()]
+    # routes = [i.serialize for i in MapRoutes.query.all()]
     title = 'Выбор маршрута'
-    title = title.decode('utf-8')
-    return render_template('selectRoute.html', title=title, routes=routes)
+    # title = title.decode('utf-8')
+    cityName = request.args.get('cityName')
+    if (cityName):
+        routes = [i.serialize for i in MapRoutes.query.filter(MapRoutes.city.endswith(cityName)).all()]
+        return render_template('selectRoute.html', title=title, routes = routes)
+    else:
+        return render_template('selectRoute.html', title=title, cityNames = getCityNames())
     # return jsonify(json_list=[i.serialize for i in MapRoutes.query.all()])
 
-@app.route('/select-point')
+@app.route('/select-point', methods=['GET'])
 def selectPoint():
-    points = [i.serialize for i in MapPoints.query.all()]
+    points = getPoints()
     title = 'Выбор точки'
-    title = title.decode('utf-8')
-    return render_template('selectPoint.html', title=title, points = points)
+    cityName = request.args.get('cityName')
+    # title = title.decode('utf-8')
+    if (cityName):
+        points = [i.serialize for i in MapPoints.query.filter(MapPoints.city.endswith(cityName)).all()]
+        return render_template('selectPoint.html', title=title, points = points)
+    else:
+        return render_template('selectPoint.html', title=title, cityNames = getCityNames())
 
 @app.route('/build-route', methods=['GET'])
 def buildRoute():
@@ -95,3 +106,56 @@ def gotoPoint():
 @app.route('/map', methods=['GET'])
 def openMap():
     return render_template('map.html')
+
+@app.route('/add-point', methods=['GET', 'POST'])
+def addPoint():
+    if request.method == 'POST':
+        city = request.values.get('city')
+        name = request.values.get('name')
+        desc = request.values.get('desc')
+        posX = request.values.get('posX')
+        posY = request.values.get('posY')
+        if (not name or not city or not desc):
+            return render_template('addPoint.html', success = 'false', newPointName = name, cityList = getCityNames())
+        try:
+            newPoint = MapPoints(city = city, name = name, description = desc, pointX = posX, pointY = posY)
+            db.session.add(newPoint)
+            db.session.commit()
+            success = 'true'
+        except exc.SQLAlchemyError:
+            success = 'false'
+        return render_template('addPoint.html', success = success, newPointName = name, cityList = getCityNames())
+    else:
+        return render_template('addPoint.html', cityList = getCityNames())
+
+@app.route('/create-route', methods=['GET', 'POST'])
+def createRoute():
+    if request.method == 'POST':
+        city = request.values.get('city')
+        routeName = request.values.get('routeName')
+        mapPointNames = request.values.get('mapPointNames')
+        if (not routeName or not city or not mapPointNames or city not in getCityNames()):
+            return render_template('createRoute.html', success = 'false', newRouteName = routeName, pointList = getPoints())
+        try:
+            newRoute = MapRoutes(city = city, routeName = routeName, mapPointNames = mapPointNames)
+            db.session.add(newRoute)
+            db.session.commit()
+            success = 'true'
+        except exc.SQLAlchemyError:
+            success = 'false'
+        return render_template('createRoute.html', success = success, newRouteName = routeName, pointList = getPoints())
+    else:
+        return render_template('createRoute.html', pointList = getPoints())
+        # yourarg = flask.request.args.get('argname')
+        # your_register_template_rendering(yourarg)
+
+def getCityNames():
+    cityList = []
+    pointList = MapPoints.query.all()
+    for point in pointList:
+        if (point.city not in cityList):
+            cityList.append(point.city)
+    return cityList
+
+def getPoints():
+    return [i.serialize for i in MapPoints.query.all()]

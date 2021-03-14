@@ -1,0 +1,28 @@
+{% extends "header.html" %}
+{% block content %}
+{% if success == 'true' %}
+    <h1>Новая точка "{{ newPointName }}" успешно добавлена.</h1>
+{% endif %}
+{% if success == 'false' %}
+    <h1>Ошибка при добавлении точки "{{ newPointName }}". Заполните данные корректно!</h1>
+{% endif %}
+<h1>Добавить новую точку интереса:</h1>
+<form action="{{ url_for('addPoint') }}" method="post" id="pointForm">
+    <label for="fname">Город:</label>
+    <input type="text" id="city" name="city"><br><br>
+    <label for="lname">Название точки:</label>
+    <input type="text" id="name" name="name"><br><br>
+    <label for="lname">Позиция по X:</label>
+    <input id="posX" name="posX" pattern="[0-9.]+" type="text"><br><br>
+    <label for="lname">Позиция по Y:</label>
+    <input id="posY" name="posY" pattern="[0-9.]+" type="text"><br><br>
+    <label for="lname">Описание точки:</label>
+    <textarea name="desc" id="desc" form="pointForm">Введите здесь описание точки...</textarea><br><br>
+    <input type="submit" value="Создать">
+  </form> 
+<p>Подсказка - если вы добавляете точку в уже существующий город, то полностью скопируйте его имя из списка ниже:</p>
+{% for city in cityList %}
+<p><b>{{ city }}</b></p>
+{% endfor %}
+</div>  
+{% endblock %}
