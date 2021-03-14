@@ -79,7 +79,7 @@ def buildRoute():
         url = url + str(point.pointX) + "%2C" + str(point.pointY) + "~"
     url = url[:len(url) - 1]
     url = url + "&rtt=" + rtt
-    return render_template('map.html', url = url, pointDesc = pointDesc)
+    return render_template('map.html', routeName = route.routeName, url = url, pointDesc = pointDesc)
 
 @app.route('/goto-point', methods=['GET'])
 def gotoPoint():
