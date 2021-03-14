@@ -1,0 +1,25 @@
+{% extends "header.html" %}
+{% block content %}
+{% if success == 'true' %}
+    <h1>Новый маршрут "{{ newRouteName }}" успешно добавлен.</h1>
+{% endif %}
+{% if success == 'false' %}
+    <h1>Ошибка при создании маршрута "{{ newRouteName }}". Заполните данные корректно!</h1>
+{% endif %}
+<h1>Создать новый маршрут из существующих точек:</h1>
+<form action="{{ url_for('createRoute') }}" method="post" id="routeForm">
+    <label for="fname">Город:</label>
+    <input type="text" id="city" name="city"><br><br>
+    <label for="lname">Название маршрута:</label>
+    <input type="text" id="routeName" name="routeName"><br><br>
+    <label for="lname">Список названий точек:</label>
+    <input type="text" id="mapPointNames" name="mapPointNames"><br><br>
+    <input type="submit" value="Создать">
+  </form> 
+<p>Подсказка - вы можете создавать маршруты только внутри одного города из существующих в базе точек. <br> 
+    Выберите необходимые названия точек и введите их через запятую в поле "Список названий точек":</p>
+{% for point in pointList %}
+<p><b>Название точки: {{ point.name }}, город точки: {{ point.city}}, координаты точки: {{point.pointX}} {{point.pointY}}</b></p>
+{% endfor %}
+</div>  
+{% endblock %}

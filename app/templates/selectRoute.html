@@ -1,7 +1,19 @@
 {% extends "header.html" %}
 {% block content %}
-<p>Список всех маршрутов:</p>
-{% for route in routes %}
-<div><p>В городе {{ route.city }} есть маршрут: <a href="/build-route?routeId={{ route.id }}"><b>{{ route.routeName }}</b></a></p></div>
-{% endfor %}
+
+{% if cityNames %}
+    <p>Список доступных городов:</p>
+    {% for city in cityNames %}
+    <div><p><a href="/select-route?cityName={{ city }}"><b>{{ city }}</b></a></p></div>
+    {% endfor %}
+    <p>Подсказка - нажмите на город, чтобы посмотреть доступные для него маршруты.</p>
+{% else %}
+    {% if routes[0] %}
+        {% for route in routes %}
+        <div><p>В городе {{ route.city }} есть маршрут: <a href="/build-route?routeId={{ route.id }}"><b>{{ route.routeName }}</b></a></p></div>
+        {% endfor %}
+    {% else %}
+        <p>Ой, в этом городе пока нет маршрутов, но есть достопримечательности. Посмотрите их список по ссылке.</p>
+    {% endif %}
+{% endif %}
 {% endblock %}

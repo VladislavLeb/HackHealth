@@ -1,7 +1,15 @@
 {% extends "header.html" %}
 {% block content %}
-<p>Список всех достопримечательностей:</p>
-{% for point in points %}
-<div><p>В городе {{ point.city }} мы советуем посетить: <a href="/goto-point?pointId={{ point.id }}"><b>{{ point.name }}</b></a></p></div>
-{% endfor %}
+
+{% if cityNames %}
+    <p>Список доступных городов:</p>
+    {% for city in cityNames %}
+    <div><p><a href="/select-point?cityName={{ city }}"><b>{{ city }}</b></a></p></div>
+    {% endfor %}
+    <p>Подсказка - нажмите на город, чтобы посмотреть доступные для него точки интереса.</p>
+{% else %}
+    {% for point in points %}
+    <div><p>В городе {{ point.city }} мы советуем посетить: <a href="/goto-point?pointId={{ point.id }}"><b>{{ point.name }}</b></a></p></div>
+    {% endfor %}
+{% endif %}
 {% endblock %}
