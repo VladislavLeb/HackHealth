@@ -55,7 +55,7 @@ def selectRoute():
     # ]
     # routes = [i.serialize for i in MapRoutes.query.all()]
     title = 'Выбор маршрута'
-    # title = title.decode('utf-8')
+    title = title.decode('utf-8')
     cityName = request.args.get('cityName')
     if (cityName):
         routes = [i.serialize for i in MapRoutes.query.filter(MapRoutes.city.endswith(cityName)).all()]
@@ -69,7 +69,7 @@ def selectPoint():
     points = getPoints()
     title = 'Выбор точки'
     cityName = request.args.get('cityName')
-    # title = title.decode('utf-8')
+    title = title.decode('utf-8')
     if (cityName):
         points = [i.serialize for i in MapPoints.query.filter(MapPoints.city.endswith(cityName)).all()]
         return render_template('selectPoint.html', title=title, points = points)
