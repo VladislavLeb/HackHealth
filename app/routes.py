@@ -6,8 +6,10 @@ from app.models import MapPoints, MapRoutes
 @app.route('/')
 @app.route('/index')
 def index():
-    # point = MapPoints(name = "Аптека", city = 'п. Глуша (Бобруйский р-н)', pointX = 53.087330, pointY = 28.861244)
-    # db.session.add(point)
+    point = MapPoints.query.filter_by(id=8).first()
+    point.description = 'Арт-объект “Прыпынак Адамовича”, является первым проектом в рамках компании по увековечиванию памяти Алеся Адамовича, инициативной группой “Прыпынак Адамовича”. Идея создания арт-объекта заключалось в том чтобы привлечь внимание к творчеству и личности Алеся Адамовича и к проблеме что он не был увековечен. Данная остановка инициативой была не случайно, центральную улицу Октябрьскую хотели переименовать в 90-х, но власть решила назвать пересекающую тут рядом улицу в честь него. Здесь рядом находится дом Алеся Адамовича в котором он жил после войны. Возле дома можете увидеть три березы, которые вы встретите в строках на остановке. Он считал его своей малой родиной, хоть он и родился в другом месте. Здесь снимался один из первых фильмов по его книге Туровым. Он был реализован в сентябре 2018 году и презентован в рамках фестиваля “Глушанский хуторок”. Автор Алесь Благий'
+    db.session.commit()
+    #  db.session.add(point)
     # point = MapPoints(name = "Памятник Алесю Адамовичу", city = 'п. Глуша (Бобруйский р-н)', pointX = 53.087486, pointY = 28.854656)
     # db.session.add(point)
     # point = MapPoints(name = "Могила Алеся Адамовича", city = 'п. Глуша (Бобруйский р-н)', pointX = 53.087486, pointY = 28.854656)
@@ -50,17 +52,21 @@ def selectRoute():
     #     }
     # ]
     routes = [i.serialize for i in MapRoutes.query.all()]
-    return render_template('selectRoute.html', title='Выбор маршрута', routes= routes)
+    title = 'Выбор маршрута'
+    # title = title.decode('utf-8')
+    return render_template('selectRoute.html', title=title, routes=routes)
     # return jsonify(json_list=[i.serialize for i in MapRoutes.query.all()])
 
 @app.route('/select-point')
 def selectPoint():
     points = [i.serialize for i in MapPoints.query.all()]
-    return render_template('selectPoint.html', title='Выбор точки', points = points)
+    title = 'Выбор точки'
+    # title = title.decode('utf-8')
+    return render_template('selectPoint.html', title=title, points = points)
 
 @app.route('/build-route', methods=['GET'])
 def buildRoute():
-    pointList = []
+    pointDesc = []
     routeId = request.args.get('routeId')
     route = MapRoutes.query.get(routeId)
     pointNamesList = route.mapPointNames.split(",")
@@ -68,11 +74,11 @@ def buildRoute():
     url = 'https://yandex.ru/map-widget/v1/?rtext='
     for pointName in pointNamesList:
         point = MapPoints.query.filter_by(name=pointName.strip()).first()
-        pointList.append([point.pointX, point.pointY])
+        pointDesc.append([point.name, point.description])
         url = url + str(point.pointX) + "%2C" + str(point.pointY) + "~"
     url = url[:len(url) - 1]
     url = url + "&rtt=" + rtt
-    return render_template('map.html', url = url)
+    return render_template('map.html', url = url, pointDesc = pointDesc)
 
 @app.route('/goto-point', methods=['GET'])
 def gotoPoint():
@@ -83,7 +89,7 @@ def gotoPoint():
     url = url + str(point.pointX) + "%2C" + str(point.pointY) + "~"
     url = url[:len(url) - 1]
     url = url + "&z=" + zoom
-    return render_template('map.html', url = url)
+    return render_template('map.html', url = url, desc = point.description)
 
 @app.route('/map', methods=['GET'])
 def openMap():

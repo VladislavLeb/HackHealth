@@ -1,5 +1,24 @@
 <!-- <meta http-equiv="Refresh" content="0; url='{{ url }}'" /> -->
 {% extends "header.html" %}
 {% block content %}
+<style>
+   div {
+   word-wrap: break-word;
+   width: 860px;
+}
+   </style>
 <iframe src="{{ url }}" width="860" height="700" frameborder="1" allowfullscreen="true"></iframe>
+{% if desc  %}
+    <div> 
+        <p>{{ desc }}</p> 
+    </div>  
+{% endif %}
+{% if pointDesc  %}
+    <div> 
+        <h1>Этот маршрут проходит через интересные точки:</h1>
+        {% for point in pointDesc %}
+        <div><p><h2>{{ point[0] }} </h2><br> Подробнее о точке: <b>{{ point[1] }}</b></p></div>
+        {% endfor %}
+    </div>  
+{% endif %}
 {% endblock %}

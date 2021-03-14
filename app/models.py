@@ -7,11 +7,12 @@ class MapPoints(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     city = db.Column(db.String(120), index=True, unique=False)
     name = db.Column(db.String(120), index=True, unique=False)
+    description = db.Column(db.String(1000), index=True, unique=False)
     pointX = db.Column(db.Float, index=True, unique=False)
     pointY = db.Column(db.Float, index=True, unique=False)
 
     def __repr__(self):
-        return '<Sightseen name {}, city {}, pointX {}, pointY {}>'.format(self.name, self.city, self.pointX, self.pointY) 
+        return '<Sightseen name {}, city {}, desc {}, pointX {}, pointY {}>'.format(self.name, self.city, self.description, self.pointX, self.pointY) 
 
     @property
     def serialize(self):
