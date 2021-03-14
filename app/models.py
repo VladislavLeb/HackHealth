@@ -1,7 +1,6 @@
 from app import db
-from sqlalchemy_serializer import SerializerMixin
 
-class MapPoints(db.Model, SerializerMixin):
+class MapPoints(db.Model):
     serialize_only = ('id', 'name', 'city', 'pointX', 'pointY')
 
     id = db.Column(db.Integer, primary_key=True)
@@ -25,7 +24,7 @@ class MapPoints(db.Model, SerializerMixin):
            'pointY'     : self.pointY
        }
 
-class MapRoutes(db.Model, SerializerMixin):
+class MapRoutes(db.Model):
     serialize_only = ('id', 'city', 'routeName', 'mapPointNames')
 
     id = db.Column(db.Integer, primary_key=True)
