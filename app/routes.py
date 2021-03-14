@@ -98,7 +98,7 @@ def gotoPoint():
     pointId = request.args.get('pointId')
     point = MapPoints.query.get(pointId)
     url = 'https://yandex.ru/map-widget/v1/?rtext='
-    url = url + str(point.pointX) + "%2C" + str(point.pointY) + "~"
+    url = url + str(point.pointX) + "," + str(point.pointY) + "~"
     url = url[:len(url) - 1]
     url = url + "&z=" + zoom
     return render_template('map.html', pointName = point.name, url = url, desc = point.description)
